@@ -25,3 +25,9 @@ export interface LoginRequest{
     email: string;
     password: string;
 }
+
+export enum UserRole {
+    ADMIN = 'ADMIN',
+    STUDENT = 'STUDENT',
+    TEACHER = 'TEACHER'
+}

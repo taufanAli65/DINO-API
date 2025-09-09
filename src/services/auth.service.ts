@@ -1,16 +1,17 @@
 import { getUserByEmail } from "../repositories/user.repository";
 import { comparePassword } from "../lib/password";
 import jwt from 'jsonwebtoken';
+import { AppError } from "../utils/app_error";
 
 export const login = async (email: string, password: string) => {
   try {
     const user = await getUserByEmail(email);
     if (!user) {
-        throw new Error("User not found");
+        return AppError("User not found", 404);
     }
     const isValidPassword = await comparePassword(password, user.password);
     if (!isValidPassword) {
-        throw new Error("Invalid password");
+        return AppError("Invalid password", 401);
     }
     const token = jwt.sign(
             { id: user.id.toString(), email: user.email, role: user.role },

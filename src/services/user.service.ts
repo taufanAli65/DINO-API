@@ -1,4 +1,5 @@
 import {createTeacher, createStudent, deleteUserById, getUserByEmail} from '../repositories/user.repository';
+import { AppError } from '../utils/app_error';
 
 export const registerTeacher = async (name: string, email: string, password: string) => {
   return await createTeacher(name, email, password);
@@ -7,7 +8,7 @@ export const registerTeacher = async (name: string, email: string, password: str
 export const registerStudent = async (name: string, email: string, password: string) => {
     const user = await getUserByEmail(email);
     if (user) {
-        throw new Error("User with this email already exists");
+        return AppError("User with this email already exists", 400);
     }
     return await createStudent(name, email, password);
 }
