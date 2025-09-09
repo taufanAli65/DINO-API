@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum roles {
+  STUDENT
+  ADMIN
+  TEACHER
+}
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  roles     roles    @default(STUDENT)
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Quiz Quiz[]
+  Student_Answer Student_Answer[]
+}
+
+model Kerajaan {
+  id        Int      @id @default(autoincrement())
+  name      String
+  stardate DateTime
+  enddate   DateTime
+  king_name String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Tokoh Tokoh[]
+}
+
+model Tokoh {
+  id        Int      @id @default(autoincrement())
+  name      String
+  kerajaan  Kerajaan @relation(fields: [kerajaanId], references: [id])
+  kerajaanId Int
+  birthdate DateTime
+  deathdate DateTime?
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id        Int      @id @default(autoincrement())
+  category  Question_Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  text      String
+  optionA   String
+  optionB   String
+  optionC   String
+  optionD   String
+  correctOption String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Quiz Quiz[]
+  Student_Answer Student_Answer[]
+}
+
+model Question_Category { // Note: if kerajaan is false, it means the question is about tokoh
+  id          Int      @id @default(autoincrement())
+  isKerajaan  Boolean
+  kerajaanId  Int?
+  tokohId    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Question Question[]
+}
+
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  question Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  user    User     @relation(fields: [userId], references: [id])
+  userId  Int
+  score     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Student_Answer {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  question  Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  selectedOption String
+  isCorrect Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
