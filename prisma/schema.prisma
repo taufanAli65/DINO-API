@@ -21,7 +21,7 @@ enum roles {
 
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   email     String   @unique
   password  String
   role     roles    @default(STUDENT)
@@ -87,16 +87,16 @@ model Quiz {
   question Question @relation(fields: [questionId], references: [id])
   questionId Int
   user    User     @relation(fields: [userId], references: [id])
-  userId  Int
+  userId  String
   score     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Student_Answer {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  userId    String
   question  Question @relation(fields: [questionId], references: [id])
   questionId Int
   selectedOption String
