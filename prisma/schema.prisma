@@ -35,7 +35,7 @@ model User {
 model Kerajaan {
   id        Int      @id @default(autoincrement())
   name      String
-  stardate DateTime
+  startdate DateTime
   enddate   DateTime
   king_name String
   description String
