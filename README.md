@@ -439,6 +439,7 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
       "score": 0
     }
   }
+  ```
 - **cURL Example:**
   ```bash
   curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
@@ -507,6 +508,35 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
   ```bash
   curl -H "Authorization: Bearer <token>" http://localhost:3000/quiz/1/answers
   ```
+
+---
+
+### Quiz Flow (Frontend Handling)
+
+This is how the frontend should handle when a student starts a quiz:
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+
+    Client->>API: POST /quiz (membuat sesi kuis baru)
+    API-->>Client: quizId
+
+    Client->>API: GET /question/category/:id (mengambil semua soal kuis)
+    API-->>Client: Daftar Pertanyaan
+
+    loop Untuk setiap pertanyaan (misal: 10 kali)
+        Client->>Client: Menampilkan Pertanyaan ke-N
+        Client->>API: POST /quiz/:id/answer (kirim jawaban)
+        API-->>Client: Hasil Jawaban (benar/salah)
+    end
+
+    Client->>API: GET /quiz/:id (minta hasil akhir kuis)
+    API-->>Client: Detail Kuis (termasuk skor akhir)
+
+    Client->>Client: Menampilkan Skor Akhir ke Pengguna
+```
 
 ---
 
