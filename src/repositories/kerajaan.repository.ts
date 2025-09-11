@@ -33,11 +33,11 @@ export const createKerajaan = async(name: string, startdate: Date, enddate: Date
 
 export const updateKerajaan = async(id: number, name?: string | null, startdate?: Date | null, enddate?: Date | null, king_name?: string | null, description?: string | null): Promise<Kerajaan | null> => {
   const dataToUpdate: any = {};
-  if(name) dataToUpdate.name = name;
-  if(startdate) dataToUpdate.startdate = startdate;
-  if(enddate) dataToUpdate.enddate = enddate;
-  if(king_name) dataToUpdate.king_name = king_name;
-  if(description) dataToUpdate.description = description;
+  if(name != undefined && name != null) dataToUpdate.name = name;
+  if(startdate != undefined && startdate != null) dataToUpdate.startdate = startdate;
+  if(enddate != undefined && enddate != null) dataToUpdate.enddate = enddate;
+  if(king_name != undefined && king_name != null) dataToUpdate.king_name = king_name;
+  if(description != undefined && description != null) dataToUpdate.description = description;
 
   return prisma.kerajaan.update({
     where: { id },

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { isEmailTaken, registerStudent, registerTeacher } from "../services/user.service";
 import { login } from "../services/auth.service";
-import { RegisterRequest, LoginRequest } from "../types/auth_types";
+import { RegisterRequest, LoginRequest } from "../types/auth.types";
 import { AppError } from "../utils/app_error";
 import { sendFail, sendSuccess } from "../utils/send_responses";
 

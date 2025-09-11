@@ -4,7 +4,7 @@ import { authenticate } from "../middlewares/authentication";
 import { sendSuccess } from "../utils/send_responses";
 import { deleteUserController } from "../controllers/user.controller";
 import { authorize } from "../middlewares/authorization";
-import { UserRole } from "../types/auth_types";
+import { UserRole } from "../types/auth.types";
 
 const router = Router();
 

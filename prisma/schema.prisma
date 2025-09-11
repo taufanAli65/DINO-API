@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"] 
 }
 
 datasource db {
@@ -42,6 +43,7 @@ model Kerajaan {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Tokoh Tokoh[]
+  questionCategories Question_Category[] @relation("KerajaanToQuestionCategory")
 }
 
 model Tokoh {
@@ -54,6 +56,7 @@ model Tokoh {
   description String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  questionCategories Question_Category[] @relation("TokohToQuestionCategory")
 }
 
 model Question {
@@ -80,6 +83,8 @@ model Question_Category { // Note: if kerajaan is false, it means the question i
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   Question Question[]
+  kerajaan   Kerajaan? @relation("KerajaanToQuestionCategory", fields: [kerajaanId], references: [id])
+  tokoh      Tokoh?    @relation("TokohToQuestionCategory", fields: [tokohId], references: [id])
 }
 
 model Quiz {

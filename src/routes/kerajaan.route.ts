@@ -3,7 +3,7 @@ import { asyncHandler } from '../utils/async_handler';
 import { authenticate } from '../middlewares/authentication';
 import { createKerajaanController, updateKerajaanController, deleteKerajaanController, getAllKerajaanController, getKerajaanByIdController } from '../controllers/kerajaan.controller';
 import { authorize } from '../middlewares/authorization';
-import { UserRole } from '../types/auth_types';
+import { UserRole } from '../types/auth.types';
 
 
 const router = Router();
