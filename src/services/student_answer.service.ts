@@ -8,11 +8,11 @@ export const addStudentAnswer = async(questionId: number, quizId: number, userId
         const studentAnswer = await createStudentAnswer(questionId, quizId, userId, selectedOption);
         const correctOption = await getCorrectOption(questionId);
         if(correctOption === selectedOption) {
-            await incrementScore(quizId, 1);
+            await incrementScore(quizId, 10);
             await updateStudentAnswer(studentAnswer.id);
             return {student_answer: selectedOption, correct_answer: correctOption, correct: true};
         } else {
-            await decrementScore(quizId, 1);
+            await decrementScore(quizId, 10);
             return {student_answer: selectedOption, correct_answer: correctOption, correct: false};
         }
     } catch (error) {
