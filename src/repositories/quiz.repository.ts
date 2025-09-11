@@ -2,10 +2,9 @@ import { UUID } from 'crypto';
 import { prisma } from '../lib/prisma';
 import { Quiz } from '@prisma/client';
 
-export const createQuiz = async(questionId: number, userId: UUID, score: number = 0): Promise<Quiz> => {
+export const createQuiz = async(userId: UUID, score: number = 0): Promise<Quiz> => {
   return prisma.quiz.create({
     data: {
-      questionId,
       userId,
       score
     }
@@ -21,19 +20,6 @@ export const getQuizById = async(id: number): Promise<Quiz | null> => {
 export const getQuizByUserId = async(userId: UUID, page: number = 1, pageSize: number = 10): Promise<Quiz[] | null> => {
   return prisma.quiz.findMany({
     where: { userId },
-    skip: (page - 1) * pageSize,
-    take: pageSize
-  })
-}
-
-export const getAllQuizzesByQuestionId = async(questionId: number, page: number = 1, pageSize: number = 10): Promise<Quiz[] | null> => {
-  return prisma.quiz.findMany({
-    where: { questionId },
-    relationLoadStrategy: "join",
-    include: { 
-        Student_Answer: true,
-        question: true
-    },
     skip: (page - 1) * pageSize,
     take: pageSize
   })

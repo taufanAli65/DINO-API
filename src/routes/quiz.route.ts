@@ -8,7 +8,7 @@ import { UserRole } from '../types/auth.types';
 const router = Router();
 
 router.post('/', authenticate, asyncHandler(createQuizController));
-router.get('/:id', authenticate, authorize(UserRole.TEACHER), asyncHandler(getQuizByIdController));
+router.get('/:id', authenticate, asyncHandler(getQuizByIdController));
 router.post('/:id/answer', authenticate, asyncHandler(addStudentAnswerController));
 router.get('/:id/answers', authenticate, authorize(UserRole.TEACHER), asyncHandler(getStudentAnswersByQuizIdController));
 

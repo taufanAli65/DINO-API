@@ -1,11 +1,12 @@
 import { createStudentAnswer, getStudentAnswersByQuizId, updateStudentAnswer} from "../repositories/student_answer.repository";
 import { getCorrectOption } from "../repositories/question.repository";
 import { incrementScore, decrementScore } from "./quiz.service";
+import { UUID } from "crypto";
 
-export const addStudentAnswer = async(quizId: number, userId: string, selectedOption: string) => {
+export const addStudentAnswer = async(questionId: number, quizId: number, userId: UUID, selectedOption: string) => {
     try {
-        const studentAnswer = await createStudentAnswer(quizId, userId, selectedOption);
-        const correctOption = await getCorrectOption(quizId);
+        const studentAnswer = await createStudentAnswer(questionId, quizId, userId, selectedOption);
+        const correctOption = await getCorrectOption(questionId);
         if(correctOption === selectedOption) {
             await incrementScore(quizId, 1);
             await updateStudentAnswer(studentAnswer.id);

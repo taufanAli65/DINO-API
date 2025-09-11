@@ -71,7 +71,7 @@ model Question {
   correctOption String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Quiz Quiz[]
+  Student_Answer Student_Answer[]
 }
 
 model Question_Category { // Note: if kerajaan is false, it means the question is about tokoh
@@ -88,8 +88,6 @@ model Question_Category { // Note: if kerajaan is false, it means the question i
 
 model Quiz {
   id        Int      @id @default(autoincrement())
-  question Question @relation(fields: [questionId], references: [id])
-  questionId Int
   user    User     @relation(fields: [userId], references: [id])
   userId  String
   score     Int
@@ -102,8 +100,10 @@ model Student_Answer {
   id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  quiz     Quiz     @relation(fields: [quizId], references: [id])
-  quizId   Int
+  question  Question  @relation(fields: [questionId], references: [id])
+  questionId Int
+  quiz     Quiz?    @relation(fields: [quizId], references: [id])
+  quizId   Int?
   selectedOption String
   isCorrect Boolean
   createdAt DateTime @default(now())

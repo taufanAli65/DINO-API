@@ -1,9 +1,11 @@
+import { UUID } from "crypto";
 import { prisma } from "../lib/prisma";
 import { Student_Answer } from "@prisma/client";
 
-export const createStudentAnswer = async(quizId: number, userId: string, selectedOption: string, isCorrect: boolean = false): Promise<Student_Answer> => {
+export const createStudentAnswer = async(questionId: number, quizId: number, userId: UUID, selectedOption: string, isCorrect: boolean = false): Promise<Student_Answer> => {
     return prisma.student_Answer.create({
         data: {
+            questionId,
             quizId,
             userId,
             selectedOption,

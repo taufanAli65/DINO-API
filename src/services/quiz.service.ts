@@ -1,12 +1,12 @@
 import { UUID } from "crypto";
-import { createQuiz, getQuizById, getAllQuizzesByQuestionId, updateScorePlus, updateScoreMinus } from "../repositories/quiz.repository";
+import { createQuiz, getQuizById, updateScorePlus, updateScoreMinus } from "../repositories/quiz.repository";
 import { AppError } from "../utils/app_error";
 
-export const addQuiz = async(questionId: number, userId: UUID, score: number = 0) => {
-  if (!questionId || !userId) {
-    throw AppError("questionId and userId are required", 400);
+export const addQuiz = async(userId: UUID, score: number = 0) => {
+  if (!userId) {
+    throw AppError("userId is required", 400);
   }
-  return await createQuiz(questionId, userId, score);
+  return await createQuiz(userId, score);
 }
 
 export const getQuiz = async(id: number) => {
@@ -15,10 +15,6 @@ export const getQuiz = async(id: number) => {
     throw AppError("Quiz not found", 404);
   }
   return existingQuiz;
-}
-
-export const listQuizzesByQuestionId = async (questionId: number, page: number = 1, pageSize: number = 10) => {
-  return await getAllQuizzesByQuestionId(questionId, page, pageSize);
 }
 
 export const incrementScore = async(id: number, score: number) => {

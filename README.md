@@ -420,14 +420,12 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
 
 #### Create Quiz
 - **POST** `/quiz`
-- **Description:** Create a quiz attempt for a user and question.
+- **Description:** Create a quiz attempt for the authenticated user. Only one quiz per user per question is allowed (max 10 quizzes per question).
 - **Headers:** `Authorization: Bearer <token>`
 - **Request Body:**
   ```json
   {
-    "questionId": 1,
-    "userId": "<user-uuid>",
-    "score": 0
+    "quizId": 1
   }
   ```
 - **Success Response:**
@@ -437,22 +435,37 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
     "message": "Quiz created successfully",
     "data": {
       "id": 1,
-      "questionId": 1,
-      "userId": "...",
+      "userId": "<user-uuid>",
       "score": 0
     }
   }
   ```
+- **Error Response:**
+  ```json
+  { "status": "fail", "message": "Cannot create more than 10 quizzes for the same question", "data": null }
+  ```
 - **cURL Example:**
   ```bash
   curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"questionId":1,"userId":"<user-uuid>","score":0}' http://localhost:3000/quiz
+    -d '{"quizId":1}' http://localhost:3000/quiz
   ```
 
-#### Get Quiz by ID (Teacher only)
+#### Get Quiz by ID
 - **GET** `/quiz/:id`
-- **Description:** Get quiz details by ID (Teacher role required).
+- **Description:** Get quiz details by ID.
 - **Headers:** `Authorization: Bearer <token>`
+- **Success Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "Quiz retrieved successfully",
+    "data": {
+      "id": 1,
+      "userId": "<user-uuid>",
+      "score": 0
+    }
+  }
+  ```
 - **cURL Example:**
   ```bash
   curl -H "Authorization: Bearer <token>" http://localhost:3000/quiz/1
@@ -464,7 +477,10 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
 - **Headers:** `Authorization: Bearer <token>`
 - **Request Body:**
   ```json
-  { "selectedOption": "A" }
+  {
+    "questionId": 1,
+    "selectedOption": "A"
+  }
   ```
 - **Success Response:**
   ```json
@@ -478,10 +494,14 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
     }
   }
   ```
+- **Error Response:**
+  ```json
+  { "status": "fail", "message": "All fields are required", "data": null }
+  ```
 - **cURL Example:**
   ```bash
   curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"selectedOption":"A"}' http://localhost:3000/quiz/1/answer
+    -d '{"questionId":1,"selectedOption":"A"}' http://localhost:3000/quiz/1/answer
   ```
 
 #### Get Student Answers by Quiz (Teacher only)
