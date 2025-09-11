@@ -1,16 +1,16 @@
 import { createKerajaan, updateKerajaan, deleteKerajaan, getKerajaanById, getAllKerajaan } from '../repositories/kerajaan.repository';
 import { AppError } from '../utils/app_error';
 
-export const addKerajaan = async(name: string, startdate: Date, enddate: Date, king_name: string, description: string) => {
-  return await createKerajaan(name, startdate, enddate, king_name, description);
+export const addKerajaan = async(name: string, startdate: Date, enddate: Date, king_name: string, description: string, photoUrl?: string) => {
+  return await createKerajaan(name, startdate, enddate, king_name, description, photoUrl);
 }
 
-export const editKerajaan = async(id: number, name?: string | null, startdate?: Date | null, enddate?: Date | null, king_name?: string | null, description?: string | null) => {
+export const editKerajaan = async(id: number, name?: string | null, startdate?: Date | null, enddate?: Date | null, king_name?: string | null, description?: string | null, photoUrl?: string | null) => {
   const existingKerajaan = await getKerajaanById(id);
   if (!existingKerajaan) {
     throw AppError("Kerajaan not found", 404);
   }
-  return await updateKerajaan(id, name, startdate, enddate, king_name, description);
+  return await updateKerajaan(id, name, startdate, enddate, king_name, description, photoUrl);
 }
 
 export const removeKerajaan = async(id: number) => {

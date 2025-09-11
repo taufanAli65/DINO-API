@@ -18,6 +18,9 @@ A RESTful API for managing historical kingdoms (Kerajaan), figures (Tokoh), quiz
   - [Question Category](#question-category)
   - [Question](#question)
   - [Quiz & Student Answer](#quiz--student-answer)
+  - [Tokoh (Figure)](#tokoh-figure)
+- [Quiz Flow (Frontend Handling)](#quiz-flow-frontend-handling)
+- [Lisence](#license)
 
 ---
 
@@ -261,14 +264,15 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
     "startdate": "1293-01-01T00:00:00.000Z",
     "enddate": "1527-01-01T00:00:00.000Z",
     "king_name": "Raden Wijaya",
-    "description": "A powerful kingdom in Java."
+    "description": "A powerful kingdom in Java.",
+    "photoUrl": "http://example.com/photo.jpg"
   }
   ```
 - **Success/Error Response:** (see above)
 - **cURL Example:**
   ```bash
   curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"name":"Majapahit","startdate":"1293-01-01T00:00:00.000Z","enddate":"1527-01-01T00:00:00.000Z","king_name":"Raden Wijaya","description":"A powerful kingdom in Java."}' \
+    -d '{"name":"Majapahit","startdate":"1293-01-01T00:00:00.000Z","enddate":"1527-01-01T00:00:00.000Z","king_name":"Raden Wijaya","description":"A powerful kingdom in Java.","photoUrl":"http://example.com/photo.jpg"}' \
     http://localhost:3000/kerajaan
   ```
 
@@ -276,11 +280,21 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
 - **PUT** `/kerajaan/:id`
 - **Description:** Update a kingdom by ID (Teacher role required).
 - **Headers:** `Authorization: Bearer <token>`
-- **Request Body:** (same as create)
+- **Request Body:**
+  ```json
+  {
+    "name": "Majapahit Baru",
+    "startdate": "1293-01-01T00:00:00.000Z",
+    "enddate": "1527-01-01T00:00:00.000Z",
+    "king_name": "Raden Wijaya",
+    "description": "A powerful kingdom in Java, updated.",
+    "photoUrl": "http://example.com/photo-updated.jpg"
+  }
+  ```
 - **cURL Example:**
   ```bash
   curl -X PUT -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"name":"Majapahit Baru"}' http://localhost:3000/kerajaan/1
+    -d '{"name":"Majapahit Baru","startdate":"1293-01-01T00:00:00.000Z","enddate":"1527-01-01T00:00:00.000Z","king_name":"Raden Wijaya","description":"A powerful kingdom in Java, updated.","photoUrl":"http://example.com/photo-updated.jpg"}' http://localhost:3000/kerajaan/1
   ```
 
 #### Delete Kerajaan (Teacher only)
@@ -511,7 +525,116 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
 
 ---
 
-### Quiz Flow (Frontend Handling)
+### Tokoh (Figure)
+
+#### List All Tokoh
+- **GET** `/tokoh`
+- **Description:** List all historical figures (paginated).
+- **Headers:** `Authorization: Bearer <token>`
+- **Query Params:**
+  - `page` (number, optional)
+  - `pageSize` (number, optional)
+- **Success Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "Tokoh list fetched successfully",
+    "data": [
+      { "id": 1, "name": "Gajah Mada", ... }
+    ]
+  }
+  ```
+- **cURL Example:**
+  ```bash
+  curl -H "Authorization: Bearer <token>" http://localhost:3000/tokoh?page=1&pageSize=10
+  ```
+
+#### Get Tokoh by ID
+- **GET** `/tokoh/:id`
+- **Description:** Get details of a specific historical figure.
+- **Headers:** `Authorization: Bearer <token>`
+- **Success Response:**
+  ```json
+  { "status": "success", "message": "Tokoh fetched successfully", "data": { ... } }
+  ```
+- **Error Response:**
+  ```json
+  { "status": "fail", "message": "Tokoh not found", "data": null }
+  ```
+- **cURL Example:**
+  ```bash
+  curl -H "Authorization: Bearer <token>" http://localhost:3000/tokoh/1
+  ```
+
+#### Create Tokoh (Teacher only)
+- **POST** `/tokoh`
+- **Description:** Create a new historical figure (Teacher role required).
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body:**
+  ```json
+  {
+    "name": "Gajah Mada",
+    "kerajaanId": 1,
+    "birthdate": "1300-01-01T00:00:00.000Z",
+    "deathdate": "1364-01-01T00:00:00.000Z",
+    "description": "Mahapatih of Majapahit.",
+    "photoUrl": "http://example.com/photo.jpg"
+  }
+  ```
+- **Success/Error Response:** (see above)
+- **cURL Example:**
+  ```bash
+  curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
+    -d '{"name":"Gajah Mada","kerajaanId":1,"birthdate":"1300-01-01T00:00:00.000Z","deathdate":"1364-01-01T00:00:00.000Z","description":"Mahapatih of Majapahit.","photoUrl":"http://example.com/photo.jpg"}' \
+    http://localhost:3000/tokoh
+  ```
+
+#### Update Tokoh (Teacher only)
+- **PUT** `/tokoh/:id`
+- **Description:** Update a historical figure by ID (Teacher role required).
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body:**
+  ```json
+  {
+    "name": "Gajah Mada Updated",
+    "kerajaanId": 1,
+    "birthdate": "1300-01-01T00:00:00.000Z",
+    "deathdate": "1364-01-01T00:00:00.000Z",
+    "description": "Updated description.",
+    "photoUrl": "http://example.com/photo-updated.jpg"
+  }
+  ```
+- **cURL Example:**
+  ```bash
+  curl -X PUT -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
+    -d '{"name":"Gajah Mada Updated","kerajaanId":1,"birthdate":"1300-01-01T00:00:00.000Z","deathdate":"1364-01-01T00:00:00.000Z","description":"Updated description.","photoUrl":"http://example.com/photo-updated.jpg"}' http://localhost:3000/tokoh/1
+  ```
+
+#### Delete Tokoh (Teacher only)
+- **DELETE** `/tokoh/:id`
+- **Description:** Delete a historical figure by ID (Teacher role required).
+- **Headers:** `Authorization: Bearer <token>`
+- **cURL Example:**
+  ```bash
+  curl -X DELETE -H "Authorization: Bearer <token>" http://localhost:3000/tokoh/1
+  ```
+
+---
+
+## Error Handling
+
+All error responses follow this format:
+```json
+{
+  "status": "fail",
+  "message": "<error message>",
+  "data": null
+}
+```
+
+---
+
+## Quiz Flow (Frontend Handling)
 
 This is how the frontend should handle when a student starts a quiz:
 
@@ -536,19 +659,6 @@ sequenceDiagram
     API-->>Client: Detail Kuis (termasuk skor akhir)
 
     Client->>Client: Menampilkan Skor Akhir ke Pengguna
-```
-
----
-
-## Error Handling
-
-All error responses follow this format:
-```json
-{
-  "status": "fail",
-  "message": "<error message>",
-  "data": null
-}
 ```
 
 ---

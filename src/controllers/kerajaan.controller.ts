@@ -5,11 +5,11 @@ import { AppError } from "../utils/app_error";
 
 export const createKerajaanController = async (req: Request, res: Response) => {
   try {
-    const { name, startdate, enddate, king_name, description } = req.body;
+    const { name, startdate, enddate, king_name, description, photoUrl } = req.body;
     if (!name || !startdate || !enddate || !king_name || !description) {
         throw AppError("All fields are required", 400);
     }
-    const newKerajaan = await addKerajaan(name, new Date(startdate), new Date(enddate), king_name, description);
+    const newKerajaan = await addKerajaan(name, new Date(startdate), new Date(enddate), king_name, description, photoUrl);
     const data = {
         id: newKerajaan.id,
         name: newKerajaan.name,
@@ -17,6 +17,7 @@ export const createKerajaanController = async (req: Request, res: Response) => {
         enddate: newKerajaan.enddate,
         king_name: newKerajaan.king_name,
         description: newKerajaan.description,
+        photoUrl: newKerajaan.photoUrl,
     }
     sendSuccess(res, 200, "Kerajaan created successfully", data);
   } catch (error) {
@@ -27,11 +28,11 @@ export const createKerajaanController = async (req: Request, res: Response) => {
 export const updateKerajaanController = async (req: Request, res: Response) => {
   try {
     const kerajaanId = parseInt(req.params.id);
-    const { name, startdate, enddate, king_name, description } = req.body;
+    const { name, startdate, enddate, king_name, description, photoUrl } = req.body;
     if (!kerajaanId) {
         throw AppError("Invalid Kerajaan ID", 400);
     }
-    const updatedKerajaan = await editKerajaan(kerajaanId, name, startdate ? new Date(startdate) : null, enddate ? new Date(enddate) : null, king_name, description);
+    const updatedKerajaan = await editKerajaan(kerajaanId, name, startdate ? new Date(startdate) : null, enddate ? new Date(enddate) : null, king_name, description, photoUrl);
     const data = {
         id: updatedKerajaan?.id,
         name: updatedKerajaan?.name,
@@ -39,6 +40,7 @@ export const updateKerajaanController = async (req: Request, res: Response) => {
         enddate: updatedKerajaan?.enddate,
         king_name: updatedKerajaan?.king_name,
         description: updatedKerajaan?.description,
+        photoUrl: updatedKerajaan?.photoUrl,
     }
     sendSuccess(res, 200, "Kerajaan updated successfully", data);
   } catch (error) {
