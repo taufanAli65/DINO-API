@@ -6,6 +6,11 @@ export const addQuiz = async(questionId: number, userId: UUID, score: number = 0
   if (!questionId || !userId) {
     throw AppError("questionId and userId are required", 400);
   }
+  const Questions = await getAllQuizzesByQuestionId(questionId);
+  const totalQuestions = Questions ? Questions.length : 0;
+  if (totalQuestions >= 10) {
+    throw AppError("Cannot create more than 10 quizzes for the same question", 400);
+  }
   return await createQuiz(questionId, userId, score);
 }
 
