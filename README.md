@@ -68,6 +68,8 @@ DINO-API is designed to support a quiz-based learning platform about Indonesian 
    - `JWT_SECRET` — Secret key for JWT token signing
    - `PORT` — Port for the server (default: 3000)
    - `SALT_ROUNDS` — (optional) Bcrypt salt rounds (default: 5)
+   - `SUPABASE_URL` — Supabase project URL
+   - `SUPABASE_KEY` — Supabase anon/public API key
 
 ---
 
@@ -257,44 +259,42 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
 - **POST** `/kerajaan`
 - **Description:** Create a new kingdom (Teacher role required).
 - **Headers:** `Authorization: Bearer <token>`
-- **Request Body:**
-  ```json
-  {
-    "name": "Majapahit",
-    "startdate": "1293-01-01T00:00:00.000Z",
-    "enddate": "1527-01-01T00:00:00.000Z",
-    "king_name": "Raden Wijaya",
-    "description": "A powerful kingdom in Java.",
-    "photoUrl": "http://example.com/photo.jpg"
-  }
-  ```
-- **Success/Error Response:** (see above)
+- **Request Body (Form-Data):**
+  - `name` (string, required)
+  - `startdate` (string, required, ISO date)
+  - `enddate` (string, required, ISO date)
+  - `king_name` (string, required)
+  - `description` (string, required)
+  - `photo` (file, optional): Image file (jpeg/png)
 - **cURL Example:**
   ```bash
-  curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"name":"Majapahit","startdate":"1293-01-01T00:00:00.000Z","enddate":"1527-01-01T00:00:00.000Z","king_name":"Raden Wijaya","description":"A powerful kingdom in Java.","photoUrl":"http://example.com/photo.jpg"}' \
-    http://localhost:3000/kerajaan
+  curl -X POST http://localhost:3000/kerajaan \
+    -H "Authorization: Bearer <YOUR_TEACHER_JWT_TOKEN>" \
+    -F "name=Kerajaan Medang" \
+    -F "startdate=900-01-01T00:00:00.000Z" \
+    -F "enddate=1006-01-01T00:00:00.000Z" \
+    -F "king_name=Mpu Sindok" \
+    -F "description=Kerajaan di Jawa Timur" \
+    -F "photo=@/path/to/your/image.jpg"
   ```
 
 #### Update Kerajaan (Teacher only)
 - **PUT** `/kerajaan/:id`
 - **Description:** Update a kingdom by ID (Teacher role required).
 - **Headers:** `Authorization: Bearer <token>`
-- **Request Body:**
-  ```json
-  {
-    "name": "Majapahit Baru",
-    "startdate": "1293-01-01T00:00:00.000Z",
-    "enddate": "1527-01-01T00:00:00.000Z",
-    "king_name": "Raden Wijaya",
-    "description": "A powerful kingdom in Java, updated.",
-    "photoUrl": "http://example.com/photo-updated.jpg"
-  }
-  ```
+- **Request Body (Form-Data):**
+  - `name` (string, optional)
+  - `startdate` (string, optional, ISO date)
+  - `enddate` (string, optional, ISO date)
+  - `king_name` (string, optional)
+  - `description` (string, optional)
+  - `photo` (file, optional): Image file (jpeg/png)
 - **cURL Example:**
   ```bash
-  curl -X PUT -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"name":"Majapahit Baru","startdate":"1293-01-01T00:00:00.000Z","enddate":"1527-01-01T00:00:00.000Z","king_name":"Raden Wijaya","description":"A powerful kingdom in Java, updated.","photoUrl":"http://example.com/photo-updated.jpg"}' http://localhost:3000/kerajaan/1
+  curl -X PUT http://localhost:3000/kerajaan/1 \
+    -H "Authorization: Bearer <YOUR_TEACHER_JWT_TOKEN>" \
+    -F "name=Kerajaan Medang Baru" \
+    -F "photo=@/path/to/your/new-image.jpg"
   ```
 
 #### Delete Kerajaan (Teacher only)
@@ -570,44 +570,42 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
 - **POST** `/tokoh`
 - **Description:** Create a new historical figure (Teacher role required).
 - **Headers:** `Authorization: Bearer <token>`
-- **Request Body:**
-  ```json
-  {
-    "name": "Gajah Mada",
-    "kerajaanId": 1,
-    "birthdate": "1300-01-01T00:00:00.000Z",
-    "deathdate": "1364-01-01T00:00:00.000Z",
-    "description": "Mahapatih of Majapahit.",
-    "photoUrl": "http://example.com/photo.jpg"
-  }
-  ```
-- **Success/Error Response:** (see above)
+- **Request Body (Form-Data):**
+  - `name` (string, required)
+  - `kerajaanId` (number, required)
+  - `birthdate` (string, required, ISO date)
+  - `deathdate` (string, optional, ISO date)
+  - `description` (string, required)
+  - `photo` (file, optional): Image file (jpeg/png)
 - **cURL Example:**
   ```bash
-  curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"name":"Gajah Mada","kerajaanId":1,"birthdate":"1300-01-01T00:00:00.000Z","deathdate":"1364-01-01T00:00:00.000Z","description":"Mahapatih of Majapahit.","photoUrl":"http://example.com/photo.jpg"}' \
-    http://localhost:3000/tokoh
+  curl -X POST http://localhost:3000/tokoh \
+    -H "Authorization: Bearer <YOUR_TEACHER_JWT_TOKEN>" \
+    -F "name=Gajah Mada" \
+    -F "kerajaanId=1" \
+    -F "birthdate=1300-01-01T00:00:00.000Z" \
+    -F "deathdate=1364-01-01T00:00:00.000Z" \
+    -F "description=Mahapatih Majapahit" \
+    -F "photo=@/path/to/your/image.jpg"
   ```
 
 #### Update Tokoh (Teacher only)
 - **PUT** `/tokoh/:id`
 - **Description:** Update a historical figure by ID (Teacher role required).
 - **Headers:** `Authorization: Bearer <token>`
-- **Request Body:**
-  ```json
-  {
-    "name": "Gajah Mada Updated",
-    "kerajaanId": 1,
-    "birthdate": "1300-01-01T00:00:00.000Z",
-    "deathdate": "1364-01-01T00:00:00.000Z",
-    "description": "Updated description.",
-    "photoUrl": "http://example.com/photo-updated.jpg"
-  }
-  ```
+- **Request Body (Form-Data):**
+  - `name` (string, optional)
+  - `kerajaanId` (number, optional)
+  - `birthdate` (string, optional, ISO date)
+  - `deathdate` (string, optional, ISO date)
+  - `description` (string, optional)
+  - `photo` (file, optional): Image file (jpeg/png)
 - **cURL Example:**
   ```bash
-  curl -X PUT -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
-    -d '{"name":"Gajah Mada Updated","kerajaanId":1,"birthdate":"1300-01-01T00:00:00.000Z","deathdate":"1364-01-01T00:00:00.000Z","description":"Updated description.","photoUrl":"http://example.com/photo-updated.jpg"}' http://localhost:3000/tokoh/1
+  curl -X PUT http://localhost:3000/tokoh/1 \
+    -H "Authorization: Bearer <YOUR_TEACHER_JWT_TOKEN>" \
+    -F "name=Gajah Mada Updated" \
+    -F "photo=@/path/to/your/new-image.jpg"
   ```
 
 #### Delete Tokoh (Teacher only)
