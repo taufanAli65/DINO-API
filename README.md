@@ -439,11 +439,6 @@ All endpoints are prefixed by their respective resource (e.g., `/auth`, `/keraja
       "score": 0
     }
   }
-  ```
-- **Error Response:**
-  ```json
-  { "status": "fail", "message": "Cannot create more than 10 quizzes for the same question", "data": null }
-  ```
 - **cURL Example:**
   ```bash
   curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \

@@ -5,6 +5,10 @@ export const addQuestion = async(categoryId: number, text: string, optionA: stri
   if (!categoryId || !text || !optionA || !optionB || !optionC || !optionD || !correctOption) {
     throw AppError("All fields are required", 400);
   }
+  const questions = await listQuestionsByCategory(categoryId);
+  if (questions && questions.length >= 10) {
+    throw AppError("Cannot create more than 10 questions for the same category", 400);
+  }
   return await createQuestion(categoryId, text, optionA, optionB, optionC, optionD, correctOption);
 }
 

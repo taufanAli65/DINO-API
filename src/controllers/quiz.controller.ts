@@ -14,10 +14,6 @@ export const createQuizController = async (req: Request, res: Response) => {
     if (!quizId) {
         throw AppError("quizId is required", 400);
     }
-    const existingQuestion = await getStudentAnswerServiceByQuizId(quizId);
-    if (existingQuestion && existingQuestion.length >= 10) {
-        throw AppError("Cannot create more than 10 quizzes for the same question", 400);
-    }
     const newQuiz = await addQuiz(userId as `${string}-${string}-${string}-${string}-${string}`); // Copilot generated, aku mumet
     const data = {
         id: newQuiz.id,
