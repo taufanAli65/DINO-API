@@ -1,0 +1,28 @@
+import { createStudentAnswer, getStudentAnswersByQuizId, updateStudentAnswer} from "../repositories/student_answer.repository";
+import { getCorrectOption } from "../repositories/question.repository";
+import { incrementScore, decrementScore } from "./quiz.service";
+
+export const addStudentAnswer = async(quizId: number, userId: string, selectedOption: string) => {
+    try {
+        const studentAnswer = await createStudentAnswer(quizId, userId, selectedOption);
+        const correctOption = await getCorrectOption(quizId);
+        if(correctOption === selectedOption) {
+            await incrementScore(quizId, 1);
+            await updateStudentAnswer(studentAnswer.id);
+            return {student_answer: selectedOption, correct_answer: correctOption, correct: true};
+        } else {
+            await decrementScore(quizId, 1);
+            return {student_answer: selectedOption, correct_answer: correctOption, correct: false};
+        }
+    } catch (error) {
+        throw new Error("Error adding student answer");
+    }
+}
+
+export const getStudentAnswerServiceByQuizId = async(id: number) => {
+    const existingAnswer = await getStudentAnswersByQuizId(id);
+    if (!existingAnswer) {
+        throw new Error("Student Answer not found");
+    }
+    return existingAnswer;
+}
