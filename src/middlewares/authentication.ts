@@ -29,7 +29,17 @@ export const authenticate = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies?.token || req.headers.authorization?.split(" ")[1];
+  let token: string | undefined;
+
+  // Prefer cookie, fallback to Authorization header
+  if (req.cookies?.token) {
+    token = req.cookies.token;
+  } else if (req.headers.authorization) {
+    const authHeader = req.headers.authorization;
+    if (authHeader.startsWith("Bearer ")) {
+      token = authHeader.slice(7); // Remove 'Bearer '
+    }
+  }
 
   if (!token) {
     return res.status(401).json({ message: "Akses ditolak. Token tidak tersedia." });
